@@ -34,7 +34,7 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = {attr = "aind_exaspim_image_utils.__version__"}
+version = {attr = "aind_exaspim_dataset_utils.__version__"}
 
 [tool.black]
 line-length = 79
@@ -60,7 +60,7 @@ exclude = '''
 
 [tool.coverage.run]
 omit = ["*__init__*"]
-source = ["aind_exaspim_image_utils", "tests"]
+source = ["aind_exaspim_dataset_utils", "tests"]
 
 [tool.coverage.report]
 exclude_lines = [

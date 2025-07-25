@@ -17,7 +17,7 @@ import os
 import s3fs
 import zarr
 
-from aind_exaspim_image_utils import io_util
+from aind_exaspim_dataset_utils import io_util
 
 
 # --- General ---
