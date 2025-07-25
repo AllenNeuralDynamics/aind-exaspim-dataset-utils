@@ -11,11 +11,11 @@ Helper routines for loading ExaSPIM related data.
 import ast
 import pandas as pd
 
-from aind_exaspim_image_utils import s3_util
+from aind_exaspim_dataset_utils import s3_util
 
 
 # --- Load Soma Locations ---
-def load_somas_locations(brain_id):
+def load_soma_locations(brain_id):
     """
     Loads soma location coordinates for a given brain ID from S3.
 
