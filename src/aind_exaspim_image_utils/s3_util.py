@@ -134,7 +134,7 @@ def list_prefixes(bucket_name, prefix):
 
 
 # --- Image Prefix Search ---
-def get_img_prefix(brain_id, img_prefix_path=None):
+def get_img_prefix(brain_id, prefix_lookup_path=None):
     """
     Gets the image prefix path for a given brain ID.
 
@@ -142,7 +142,7 @@ def get_img_prefix(brain_id, img_prefix_path=None):
     ----------
     brain_id : str
         Identifier for the brain dataset.
-    img_prefix_path : str or None
+    prefix_lookup_path : str or None
         Optional path to a JSON file that caches brain ID to prefix mappings.
 
     Returns
@@ -151,8 +151,8 @@ def get_img_prefix(brain_id, img_prefix_path=None):
         Image path for the given brain ID.
     """
     # Check prefix lookup
-    if img_prefix_path:
-        prefix_lookup = io_util.read_json(img_prefix_path)
+    if prefix_lookup_path:
+        prefix_lookup = io_util.read_json(prefix_lookup_path)
         if brain_id in prefix_lookup:
             return prefix_lookup[brain_id]
 
@@ -160,9 +160,9 @@ def get_img_prefix(brain_id, img_prefix_path=None):
     result = find_img_prefix(brain_id)
     if len(result) == 1:
         prefix = result[0] + "/"
-        if img_prefix_path:
+        if prefix_lookup_path:
             prefix_lookup[brain_id] = prefix
-            io_util.write_json(img_prefix_path, prefix_lookup)
+            io_util.write_json(prefix_lookup_path, prefix_lookup)
         return prefix
 
     raise Exception(f"Image Prefixes Found - {result}")
