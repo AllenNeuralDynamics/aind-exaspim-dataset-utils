@@ -22,7 +22,7 @@ def load_soma_locations(brain_id):
     Parameters
     ----------
     brain_id : str
-        Unique identifier for the whole-brain dataset.
+        Unique identifier for a whole-brain ExaSPIM dataset.
 
     Returns
     -------

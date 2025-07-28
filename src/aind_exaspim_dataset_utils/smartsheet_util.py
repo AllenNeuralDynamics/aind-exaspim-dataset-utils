@@ -4,7 +4,8 @@ Created on Mon July 25 14:00:00 2025
 @author: Anna Grim
 @email: anna.grim@alleninstitute.org
 
-Helper routines for working with ExaSPIM SmartSheets.
+Helper routines for interacting with ExaSPIM SmartSheets. Sections within
+this file are marked using the convention -- {Smartsheet Name} --- .
 
 """
 
@@ -334,6 +335,86 @@ def find_confirmed_merge_sites(smartsheet_client, idxs):
     return sites, n_reviewed_sites
 
 
+# --- Neuron Reconstruction ---
+def extract_somas(smartsheet_client, microscope="ExaSPIM", status=None):
+    """
+    Extracts soma coordinates from a Neuron Reconstruction Smartsheet based on
+    a microscope type and optional status filter.
+
+    Parameters
+    ----------
+    smartsheet_client : SmartSheetClient
+        Instance of SmartSheetClient that provides access to the sheet.
+    microscope : str, optional
+        Microscope identifier to match in the "Collection" column. Default is
+        "ExaSPIM".
+    status : str or None, optional
+        If provided, only soma entries with this status are included. If None,
+        all valid coordinates are included.
+
+    Returns
+    -------
+    dict[str, List[Tuple[float]]]
+        Dictionary mapping brain IDs to lists of XYZ coordinates.
+    """
+    # Extract rows by microscope and brain_id
+    idxs = smartsheet_client.get_rows_in_column_with("Collection", microscope)
+    children_map = smartsheet_client.get_children_map()
+    children_map = {k: v for k, v in children_map.items() if k in idxs}
+
+    # Extract soma coordinates
+    soma_locations = dict()
+    for parent_idx, child_idxs in children_map.items():
+        brain_id = smartsheet_client.get_value(parent_idx, "ID")
+        xyz_list = get_coordinates(smartsheet_client, child_idxs, status)
+        if len(xyz_list) > 0:
+            soma_locations[brain_id] = xyz_list
+    return soma_locations
+
+
+def get_coordinates(smartsheet_client, row_idxs, status=None):
+    """
+    Extracts XYZ coordinates from Smartsheet, optionally filtering by a
+    provided status.
+
+    Parameters
+    ----------
+    smartsheet_client : object
+        Instance of the SmartSheetClient used to fetch cell values.
+    row_idxs : List[int]
+        List of row indices to check for coordinate and status data.
+    status : str or None, optional
+        If provided, only soma entries with this status are included. If None,
+        all valid coordinates are included.
+
+    Returns
+    -------
+    List[Tuple[float]]
+        XYZ coordinates extracted from rows speficified by the given indexes.
+    """
+    # Initializations
+    status_column_id = smartsheet_client.column_name_to_id["Status 1"]
+    coord_column_id = smartsheet_client.column_name_to_id["Horta Coordinates"]
+
+    # Parse rows
+    xyz_list = list()
+    for idx in row_idxs:
+        # Search row
+        soma_status, soma_xyz = None, None
+        for cell in smartsheet_client.sheet.rows[idx].cells:
+            if cell.column_id == status_column_id:
+                soma_status = cell.display_value or cell.value
+            elif cell.column_id == coord_column_id:
+                soma_xyz = read_xyz(cell.display_value or cell.value)
+
+        # Process result
+        if soma_status == status and soma_xyz:
+            xyz_list.append(soma_xyz)
+        elif status is None and soma_xyz:
+            xyz_list.append(soma_xyz)
+    return xyz_list
+
+
 # --- Helpers ---
 def read_xyz(xyz_str):
     """
@@ -349,4 +430,7 @@ def read_xyz(xyz_str):
     Tuple[float]
         3D coordinate.
     """
-    return ast.literal_eval(xyz_str)
+    try:
+        return tuple(ast.literal_eval(xyz_str))
+    except:
+        return None
