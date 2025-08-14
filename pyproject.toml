@@ -17,6 +17,11 @@ readme = "README.md"
 dynamic = ["version"]
 
 dependencies = [
+    'boto3',
+    'pandas',
+    's3fs',
+    'smartsheet-python-sdk',
+    'zarr',
 ]
 
 [project.optional-dependencies]
