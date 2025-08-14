@@ -15,7 +15,7 @@ from aind_exaspim_dataset_utils import s3_util
 
 
 # --- Load Soma Locations ---
-def load_soma_locations(brain_id):
+def load_soma_locations(brain_id, return_path=False):
     """
     Loads soma location coordinates for a given brain ID from S3.
 
@@ -23,6 +23,9 @@ def load_soma_locations(brain_id):
     ----------
     brain_id : str
         Unique identifier for a whole-brain ExaSPIM dataset.
+    return_path : bool, optional
+        Indication of whether to also return the file path. Default is
+        False
 
     Returns
     -------
@@ -39,7 +42,11 @@ def load_soma_locations(brain_id):
     if prefix_list:
         dirname = find_most_recent_dirname(prefix_list)
         path = f"s3://{bucket_name}/{prefix}/{dirname}/somas-{brain_id}.csv"
-        return list(pd.read_csv(path)["xyz"].apply(ast.literal_eval))
+        soma_locations = list(pd.read_csv(path)["xyz"].apply(ast.literal_eval))
+        if return_path:
+            return soma_locations, path
+        else:
+            return soma_locations
     else:
         return None
 
