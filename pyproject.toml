@@ -18,6 +18,8 @@ dynamic = ["version"]
 
 dependencies = [
     'boto3',
+    'google-cloud-storage',
+    'networkx',
     'pandas',
     's3fs',
     'smartsheet-python-sdk',
