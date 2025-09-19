@@ -336,15 +336,15 @@ def find_confirmed_merge_sites(smartsheet_client, idxs):
 
 
 # --- Neuron Reconstruction ---
-def extract_somas(smartsheet_client, microscope="ExaSPIM", status=None):
+def extract_somas(access_token, microscope="ExaSPIM", status=None):
     """
     Extracts soma coordinates from a Neuron Reconstruction Smartsheet based on
     a microscope type and optional status filter.
 
     Parameters
     ----------
-    smartsheet_client : SmartSheetClient
-        Instance of SmartSheetClient that provides access to the sheet.
+    access_token : str
+        Access token for authenticating with the Smartsheet API.
     microscope : str, optional
         Microscope identifier to match in the "Collection" column. Default is
         "ExaSPIM".
@@ -357,6 +357,10 @@ def extract_somas(smartsheet_client, microscope="ExaSPIM", status=None):
     dict[str, List[Tuple[float]]]
         Dictionary mapping brain IDs to lists of XYZ coordinates.
     """
+    # Initialize SmartSheet client
+    sheet_name = "ExM Dataset Summary"
+    smartsheet_client = SmartSheetClient(access_token, sheet_name)
+
     # Extract rows by microscope and brain_id
     idxs = smartsheet_client.get_rows_in_column_with("Collection", microscope)
     children_map = smartsheet_client.get_children_map()
