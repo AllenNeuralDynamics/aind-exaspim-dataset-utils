@@ -38,7 +38,7 @@ def exists_in_prefix(bucket_name, prefix, target_name):
     Returns
     -------
     bool
-        Indiciation of whether a given file is in a prefix.
+        Indication of whether a given file is in a prefix.
     """
     s3 = boto3.client("s3", config=Config(signature_version=UNSIGNED))
     paginator = s3.get_paginator("list_objects_v2")
@@ -165,7 +165,7 @@ def get_img_prefix(brain_id, prefix_lookup_path=None):
             io_util.write_json(prefix_lookup_path, prefix_lookup)
         return prefix
 
-    raise Exception(f"Image Prefixes Found - {result}")
+    raise Exception(f"Brain_ID={brain_id} Failed: Image Paths Found {result}")
 
 
 def find_img_prefix(brain_id):
@@ -179,7 +179,7 @@ def find_img_prefix(brain_id):
 
     Returns
     -------
-    str
+    valid_prefixes : List[str]
         Image prefix corresponding to the given brain ID.
     """
     # Initializations
