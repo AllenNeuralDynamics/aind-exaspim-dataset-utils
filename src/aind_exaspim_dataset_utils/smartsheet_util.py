@@ -358,7 +358,7 @@ def extract_somas(access_token, microscope="ExaSPIM", status=None):
         Dictionary mapping brain IDs to lists of XYZ coordinates.
     """
     # Initialize SmartSheet client
-    sheet_name = "ExM Dataset Summary"
+    sheet_name = "Neuron Reconstructions"
     smartsheet_client = SmartSheetClient(access_token, sheet_name)
 
     # Extract rows by microscope and brain_id
