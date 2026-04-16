@@ -29,9 +29,9 @@ def load_soma_locations(brain_id, return_path=False):
 
     Returns
     -------
-    List[Tuple[int]] or None
+    List[Tuple[int]]
         Physical coordinates representing soma locations if data is found;
-        otherwise, returns None.
+        otherwise, returns an empty list.
     """
     # Find soma results for brain_id
     bucket_name = 'aind-msma-morphology-data'
@@ -48,7 +48,7 @@ def load_soma_locations(brain_id, return_path=False):
         else:
             return soma_locations
     else:
-        return None
+        return list()
 
 
 def find_most_recent_dirname(results_prefix_list):
