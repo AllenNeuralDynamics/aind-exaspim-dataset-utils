@@ -102,7 +102,7 @@ class SmartSheetClient:
         int
             ID of the matched sheet.
         """
-        response = self.client.Sheets.list_sheets()
+        response = self.client.Sheets.list_sheets(include_all=True)
         for sheet in response.data:
             if sheet.name == self.sheet_name:
                 return sheet.id
